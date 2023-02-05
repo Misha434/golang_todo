@@ -1,0 +1,24 @@
+# バージョン指定
+version: "3"
+# コンテナのサービス設定
+services:
+  # appコンテナ設定(API)
+  app:
+    # コンテナビルドの設定
+    build:
+      # 実行先のdirectory設定
+      context: ./
+    # 実行するコマンド設定
+      # pure な go を実行するなら、
+      # go run cmd/main.go
+    command: air
+    # コンテナ内 データの保存先(コンテナを破棄すると消える)
+    # [ホスト側の相対Path]:コンテナの絶対Path
+    volumes:
+      - ./:/myapp
+    # dockerホスト 8080ポートへコンテナの8000ポートをフォワードする設定
+    ports:
+      - "8000:8000"
+    # 環境変数 指定
+    environment:
+      - PORT=8000
