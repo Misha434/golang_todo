@@ -2,12 +2,22 @@
 version: "3"
 # コンテナのサービス設定
 services:
+  db:
+    image: postgres:14.2-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGPASSWORD: postgres
+      POSTGRES_DB: database
+      TZ: "Asia/Tokyo"
+    ports:
+      - 5432:5432
   # appコンテナ設定(API)
   app:
     # コンテナビルドの設定
     build:
       # 実行先のdirectory設定
-      context: ./
+      context: ./build
     # 実行するコマンド設定
       # pure な go を実行するなら、
       # go run cmd/main.go
@@ -15,10 +25,11 @@ services:
     # コンテナ内 データの保存先(コンテナを破棄すると消える)
     # [ホスト側の相対Path]:コンテナの絶対Path
     volumes:
-      - ./:/myapp
+      - ./:/go/src/app
     # dockerホスト 8080ポートへコンテナの8000ポートをフォワードする設定
     ports:
       - "8000:8000"
+    working_dir: /go/src/app
     # 環境変数 指定
     environment:
       - PORT=8000
