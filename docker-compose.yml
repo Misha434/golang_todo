@@ -4,12 +4,15 @@ version: "3"
 services:
   db:
     image: postgres:14.2-alpine
+    container_name: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       PGPASSWORD: postgres
-      POSTGRES_DB: database
+      POSTGRES_DB: mydb
       TZ: "Asia/Tokyo"
+    volumes:
+      - db:/var/lib/db/data
     ports:
       - 5432:5432
   # appコンテナ設定(API)
@@ -33,3 +36,5 @@ services:
     # 環境変数 指定
     environment:
       - PORT=8000
+volumes:
+  db:

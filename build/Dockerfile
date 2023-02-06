@@ -11,6 +11,7 @@ ADD . /go/src/app
 # 実行権限変更
 RUN apt update \
   && go get -u github.com/cosmtrek/air \
-  && chmod +x ${GOPATH}/bin/air
+  && chmod +x ${GOPATH}/bin/air \
+  && go get -u github.com/lib/pq
 
 EXPOSE 8000
