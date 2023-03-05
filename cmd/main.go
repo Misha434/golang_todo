@@ -2,12 +2,15 @@
 package main
 // importするパッケージの宣言
 import (
+	// DB とのやりとり用
 	"database/sql"
 	"encoding/json"
 	// HTTP client, server を実装する用
 	"net/http"
 	"os"
-
+	
+	// postgresql のクライアントツール
+	// _ : packageの中身を利用せずに、init()関数が必要な場合に利用する
 	_ "github.com/lib/pq"
 )
 
@@ -59,16 +62,22 @@ func getHelloWorld(w http.ResponseWriter, _r *http.Request) {
 }
 
 func GetTodos (w http.ResponseWriter, r *http.Request) {
+	// DB接続関数
 	db := dbConn()
+	// クエリを叩く・エラーをひろう
 	rows, err := db.Query("SELECT * FROM todo;") 
 	
+	// エラーチェック関数
 	checkErr(err)
+	// todo, todos を宣言
 	todo := Todo{}
 	todos := []Todo{}
-
+	
+	// for文で todo を todos につっこむ
 	for rows.Next() {
 		var id int
 		var task string
+		// 順番注意: DB Column 順に設定しないと DB 側でエラーが起きる
 		err = rows.Scan(&task, &id)
 
 		checkErr(err)
